@@ -15,4 +15,10 @@ export class LoginService {
     signIn(userCredentials: UserCredentialsVO): Observable<any> {
         return this.http.post(ApiConstants.baseLogin, userCredentials);
     }
+
+    isAuthenticated(): boolean {
+        return localStorage.getItem('token') != null;
+    }
+
 }
+
