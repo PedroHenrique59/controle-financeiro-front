@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {LayoutService} from 'src/app/layout/service/app.layout.service';
-import {HttpClient} from "@angular/common/http";
-import {LoginService} from "../../../service/login.service";
-import {TokenVO} from "../../../model/TokenVO";
-import {UserCredentialsVO} from "../../../model/UserCredentialsVO";
+import {LoginService} from "../../service/login.service";
+import {TokenVO} from "../../model/TokenVO";
+import {UserCredentialsVO} from "../../model/UserCredentialsVO";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-login',
@@ -24,25 +24,32 @@ export class LoginComponent implements OnInit {
     userCredentials: UserCredentialsVO;
     token: TokenVO;
 
-    constructor(public layoutService: LayoutService, private loginService: LoginService) {
+    constructor(public layoutService: LayoutService,
+                private loginService: LoginService,
+                private router: Router) {
     }
 
     ngOnInit(): void {
         this.token = new TokenVO();
         this.userCredentials = new UserCredentialsVO();
+        this.isAuthenticated();
     }
 
     signIn() {
-
         this.loginService.signIn(this.userCredentials).subscribe({
             next: data => {
                 this.token = <TokenVO>data;
-                localStorage.setItem("token", this.token.accessToken);
+                localStorage.setItem('token', this.token.accessToken);
+                this.router.navigate(['dashboard']);
             }, error() {
-                console.error("Login Failed. Try Again");
+                alert("Login falhou! Tente Novamente");
+                console.error("Login falhou! Tente Novamente");
             }
         })
     }
 
+    isAuthenticated() {
+        return this.loginService.isAuthenticated() ? this.router.navigate(['dashboard']) : this.router.navigate(['']);
+    }
 
 }
