@@ -13,12 +13,11 @@ export class LoginService {
     }
 
     signIn(userCredentials: UserCredentialsVO): Observable<any> {
-        return this.http.post(ApiConstants.baseLogin, userCredentials);
+        return this.http.post(ApiConstants.baseSignIn, userCredentials);
     }
 
-    isAuthenticated(): boolean {
-        return localStorage.getItem('token') != null;
+    isAuthenticated(): Observable<any> {
+        return this.http.post(ApiConstants.baseLogin + '/validateToken', localStorage.getItem('token').toString())
     }
-
 }
 

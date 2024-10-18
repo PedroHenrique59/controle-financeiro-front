@@ -4,6 +4,7 @@ import {LoginService} from "../../service/login.service";
 import {TokenVO} from "../../model/TokenVO";
 import {UserCredentialsVO} from "../../model/UserCredentialsVO";
 import {Router} from "@angular/router";
+import {co} from "@fullcalendar/core/internal-common";
 
 @Component({
     selector: 'app-login',
@@ -49,7 +50,13 @@ export class LoginComponent implements OnInit {
     }
 
     isAuthenticated() {
-        return this.loginService.isAuthenticated() ? this.router.navigate(['dashboard']) : this.router.navigate(['']);
+        return this.loginService.isAuthenticated().subscribe({
+            next: data => {
+                data.body.result === true ? this.router.navigate(['dashboard']) : this.router.navigate(['']);
+            },
+            error: erro => {
+                console.log('Token Inválido!');
+            }
+        })
     }
-
 }
