@@ -4,7 +4,6 @@ import {LoginService} from "../../service/login.service";
 import {TokenVO} from "../../model/TokenVO";
 import {UserCredentialsVO} from "../../model/UserCredentialsVO";
 import {Router} from "@angular/router";
-import {co} from "@fullcalendar/core/internal-common";
 
 @Component({
     selector: 'app-login',
@@ -20,10 +19,10 @@ import {co} from "@fullcalendar/core/internal-common";
 })
 export class LoginComponent implements OnInit {
 
-    valCheck: string[] = ['remember'];
-
     userCredentials: UserCredentialsVO;
     token: TokenVO;
+
+    loading: boolean = true;
 
     constructor(public layoutService: LayoutService,
                 private loginService: LoginService,
@@ -37,14 +36,18 @@ export class LoginComponent implements OnInit {
     }
 
     signIn() {
+        this.loading = true;
         this.loginService.signIn(this.userCredentials).subscribe({
             next: data => {
                 this.token = <TokenVO>data;
                 localStorage.setItem('token', this.token.accessToken);
                 this.router.navigate(['dashboard']);
-            }, error() {
+            }, error: error => {
                 alert("Login falhou! Tente Novamente");
-                console.error("Login falhou! Tente Novamente");
+                this.loading = false;
+                this.router.navigate(['']);
+            }, complete: () => {
+                this.loading = false;
             }
         })
     }
@@ -52,10 +55,15 @@ export class LoginComponent implements OnInit {
     isAuthenticated() {
         return this.loginService.isAuthenticated().subscribe({
             next: data => {
-                data.body.result === true ? this.router.navigate(['dashboard']) : this.router.navigate(['']);
+                this.loading = true;
+                data === true ? this.router.navigate(['dashboard']) : this.router.navigate(['']);
             },
-            error: erro => {
+            error: () => {
                 console.log('Token Inválido!');
+                this.loading = false;
+            },
+            complete: () => {
+                this.loading = false;
             }
         })
     }

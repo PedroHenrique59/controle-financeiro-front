@@ -14,7 +14,7 @@ import {authGuard} from "./demo/service/global.guard";
                 path: '', component: AppLayoutComponent, canActivate: [authGuard],
                 children: [
                     {
-                        path: '',
+                        path: 'dashboard',
                         loadChildren: () => import('./demo/components/dashboard/dashboard.module').then(m => m.DashboardModule)
                     },
                     {

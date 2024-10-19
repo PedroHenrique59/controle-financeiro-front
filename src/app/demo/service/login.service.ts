@@ -17,7 +17,7 @@ export class LoginService {
     }
 
     isAuthenticated(): Observable<any> {
-        return this.http.post(ApiConstants.baseLogin + '/validateToken', localStorage.getItem('token').toString())
+        return this.http.post(ApiConstants.baseLogin + '/validateToken', localStorage.getItem('token') === null ? ' ' : localStorage.getItem('token') )
     }
 }
 
