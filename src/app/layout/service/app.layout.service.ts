@@ -1,5 +1,6 @@
 import { Injectable, effect, signal } from '@angular/core';
 import { Subject } from 'rxjs';
+import {Router} from "@angular/router";
 
 export interface AppConfig {
     inputStyle: string;
@@ -51,7 +52,7 @@ export class LayoutService {
 
     overlayOpen$ = this.overlayOpen.asObservable();
 
-    constructor() {
+    constructor(private router: Router) {
         effect(() => {
             const config = this.config();
             if (this.updateStyle(config)) {
@@ -156,4 +157,12 @@ export class LayoutService {
     changeScale(value: number) {
         document.documentElement.style.fontSize = `${value}px`;
     }
+
+    logout(){
+        this.router.navigate(['']).then(() => {
+            localStorage.removeItem('token');
+        });
+    }
+
 }
+

@@ -48,7 +48,7 @@ import {authGuard} from "./demo/service/global.guard";
 
             {path: 'notfound', component: NotfoundComponent},
 
-            {path: '**', redirectTo: '/notfound'},
+            {path: '**', redirectTo: '/notfound'}
 
         ], {scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', onSameUrlNavigation: 'reload'})
     ],
